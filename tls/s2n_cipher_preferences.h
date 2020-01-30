@@ -25,6 +25,8 @@ struct s2n_cipher_preferences {
     int minimum_protocol_version;
 };
 
+extern uint8_t s2n_highest_protocol_version;
+
 extern const struct s2n_cipher_preferences cipher_preferences_20140601;
 extern const struct s2n_cipher_preferences cipher_preferences_20141001;
 extern const struct s2n_cipher_preferences cipher_preferences_20150202;
@@ -59,5 +61,6 @@ extern const struct s2n_cipher_preferences elb_security_policy_fs_1_2_res_2019_0
 extern int s2n_cipher_preferences_init();
 extern int s2n_find_cipher_pref_from_version(const char *version, const struct s2n_cipher_preferences **cipher_preferences);
 extern int s2n_config_set_cipher_preferences(struct s2n_config *config, const char *version);
+extern int s2n_config_set_min_protocol_version(struct s2n_config *config, const char *version);
 extern int s2n_ecc_extension_required(const struct s2n_cipher_preferences *preferences);
 extern int s2n_pq_kem_extension_required(const struct s2n_cipher_preferences *preferences);

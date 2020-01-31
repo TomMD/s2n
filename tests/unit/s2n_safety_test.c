@@ -335,6 +335,26 @@ int main(int argc, char **argv)
     CHECK_OVF(s2n_mul_overflow, uint32_t, 0x1FFFF, 0x1FFFF);
     CHECK_OVF(s2n_mul_overflow, uint32_t, ~0u, ~0u);
 
+    const uint32_t HALF_MAX = UINT32_MAX / 2;
+    const uint32_t ACTUAL_MAX = UINT32_MAX;
+
+    CHECK_NO_OVF(s2n_add_overflow, uint32_t, 0, 0, 0);
+    CHECK_NO_OVF(s2n_add_overflow, uint32_t, 0, 1, 1);
+    CHECK_NO_OVF(s2n_add_overflow, uint32_t, 4, 5, 9);
+    CHECK_NO_OVF(s2n_add_overflow, uint32_t, 1234, 4321, 5555);
+    CHECK_NO_OVF(s2n_add_overflow, uint32_t, 0, ACTUAL_MAX, ACTUAL_MAX);
+    CHECK_NO_OVF(s2n_add_overflow, uint32_t, HALF_MAX, HALF_MAX, ACTUAL_MAX - 1);
+    CHECK_NO_OVF(s2n_add_overflow, uint32_t, HALF_MAX + 1, HALF_MAX, ACTUAL_MAX);
+    CHECK_NO_OVF(s2n_add_overflow, uint32_t, 100, ACTUAL_MAX - 102, ACTUAL_MAX - 2);
+    CHECK_NO_OVF(s2n_add_overflow, uint32_t, 100, ACTUAL_MAX - 100, ACTUAL_MAX);
+    CHECK_OVF(s2n_add_overflow, uint32_t, 1, ACTUAL_MAX);
+    CHECK_OVF(s2n_add_overflow, uint32_t, 100, ACTUAL_MAX);
+    CHECK_OVF(s2n_add_overflow, uint32_t, HALF_MAX, ACTUAL_MAX);
+    CHECK_OVF(s2n_add_overflow, uint32_t, ACTUAL_MAX, ACTUAL_MAX);
+    CHECK_OVF(s2n_add_overflow, uint32_t, HALF_MAX + 1, HALF_MAX + 1);
+    CHECK_OVF(s2n_add_overflow, uint32_t, 100, ACTUAL_MAX - 99);
+    CHECK_OVF(s2n_add_overflow, uint32_t, 100, ACTUAL_MAX - 1);
+
     END_TEST();
     return 0;
 }

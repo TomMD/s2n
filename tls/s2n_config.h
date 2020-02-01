@@ -33,7 +33,7 @@ struct s2n_cipher_preferences;
 struct s2n_config {
     struct s2n_dh_params *dhparams;
     /* Needed until we can deprecate s2n_config_add_cert_chain_and_key. This is
-     * used to release memory allocated only in the deprecated API that the application 
+     * used to release memory allocated only in the deprecated API that the application
      * does not have a reference to. */
     unsigned cert_allocated:1;
     struct s2n_map *domain_name_to_cert_map;
@@ -93,6 +93,10 @@ struct s2n_config {
     uint8_t disable_x509_validation;
     uint16_t max_verify_cert_chain_depth;
     uint8_t max_verify_cert_chain_depth_set;
+
+    /* Minimum supported TLS protocol version. This is initiated according to attached
+     * cipher_preferences but can be updated by s2n_config_set_min_protocol_version. */
+    uint8_t minimum_protocol_version;
 };
 
 extern struct s2n_config *s2n_fetch_default_config(void);

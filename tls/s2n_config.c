@@ -117,6 +117,7 @@ static int s2n_config_init(struct s2n_config *config)
     config->cert_tiebreak_cb = NULL;
 
     s2n_config_set_cipher_preferences(config, "default");
+    config->minimum_protocol_version = config->cipher_preferences->minimum_protocol_version;
 
     if (s2n_is_in_fips_mode()) {
         s2n_config_set_cipher_preferences(config, "default_fips");

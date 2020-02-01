@@ -75,7 +75,7 @@ extern int s2n_config_set_monotonic_clock(struct s2n_config *config, s2n_clock_t
 
 extern const char *s2n_strerror(int error, const char *lang);
 extern const char *s2n_strerror_debug(int error, const char *lang);
-extern const char *s2n_strerror_name(int error); 
+extern const char *s2n_strerror_name(int error);
 
 struct s2n_stacktrace;
 extern bool s2n_stack_traces_enabled(void);

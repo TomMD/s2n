@@ -65,11 +65,10 @@ file(GLOB PQ_SRC
         )
 
 if(S2N_NO_PQ_ASM)
-    message(STATUS "Forcing usage of generic C code for PQ crypto")
-elseif(${CMAKE_HOST_SYSTEM_NAME} MATCHES "Darwin")
-    set(S2N_NO_PQ_ASM ON)	
-    message(STATUS "Detected Darwin, using generic C code for PQ crypto")
-elseif(${CMAKE_SYSTEM_PROCESSOR} STREQUAL "x86_64" OR ${CMAKE_SYSTEM_PROCESSOR} STREQUAL "amd64" OR (${CMAKE_SYSTEM_PROCESSOR} STREQUAL "AMD64" AND CMAKE_CL_64))
+    message(STATUS "S2N_NO_PQ_ASM flag was detected - forcing usage of generic C code for PQ crypto")
+elseif(${CMAKE_HOST_SYSTEM_NAME} STREQUAL "Linux" AND ${CMAKE_C_COMPILER_ID} STREQUAL "GNU" AND
+        ${CMAKE_C_COMPILER_VERSION} VERSION_GREATER "4.9.0" AND
+        (${CMAKE_SYSTEM_PROCESSOR} STREQUAL "x86_64" OR ${CMAKE_SYSTEM_PROCESSOR} STREQUAL "amd64" OR (${CMAKE_SYSTEM_PROCESSOR} STREQUAL "AMD64" AND CMAKE_CL_64)))
     message(STATUS "Using optimized x86_64 assembly for PQ crypto")
     enable_language(ASM)
     file(GLOB PQ_X86_64_ASM
@@ -77,7 +76,7 @@ elseif(${CMAKE_SYSTEM_PROCESSOR} STREQUAL "x86_64" OR ${CMAKE_SYSTEM_PROCESSOR} 
     list(APPEND PQ_SRC ${PQ_X86_64_ASM})
 else()
     set(S2N_NO_PQ_ASM ON)
-    message(STATUS "Architecture is not x86_64 compatible - using generic C code for PQ crypto")
+    message(STATUS "Toolchain is not compatible with PQ optimized assembly code - using generic C code instead")
 endif()
 
 file(GLOB STUFFER_SRC

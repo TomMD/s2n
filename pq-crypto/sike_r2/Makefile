@@ -16,14 +16,25 @@
 SRCS=fips202.c P434.c
 OBJS=$(SRCS:.c=.o)
 
+ifndef S2N_NO_PQ_ASM
+SHOULD_DISABLE_PQ_ASM = 1
 ARCH := $(shell uname -p)
 KERNEL := $(shell uname -s)
 ifeq ($(KERNEL), Linux)
 ifeq ($(ARCH), x86_64)
-ifndef S2N_NO_PQ_ASM
+# Using $(CC) here (instead of directly using gcc) because $(CC) may be set to
+# things such as: cc, gcc, gcc-4.9, etc. This should work for all of them.
+GCC_FULL_VERSION := $(shell $(CC) --version | grep ^$(CC) | sed 's/^.* //g')
+ifeq ($(shell expr "$(GCC_FULL_VERSION)" ">=" "4.9"), 1)
+# Linux, x86_64, and GCC >= 4.9 detected, default to optimized ASM
 ASRC=fp_x64_asm.S
 OBJS+=$(ASRC:.S=.o)
+SHOULD_DISABLE_PQ_ASM = 0
 endif
+endif
+endif
+ifeq ($(SHOULD_DISABLE_PQ_ASM), 1)
+CFLAGS += -DS2N_NO_PQ_ASM
 endif
 endif
 

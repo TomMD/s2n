@@ -41,7 +41,7 @@ int mock_client(int writefd, int readfd)
     s2n_connection_set_config(client_conn, client_config);
     s2n_connection_set_blinding(client_conn, S2N_SELF_SERVICE_BLINDING);
 
-    /* Force TLSv1 on a client so that server fail handshake */
+    /* Force TLSv1 on a client so that server will fail handshake */
     client_conn->client_protocol_version = S2N_TLS10;
 
     s2n_connection_set_read_fd(client_conn, readfd);
